@@ -7,20 +7,41 @@ Summary: 搭建全记录
 
 记录下小站的搭建过程：
 
-####1. 简介
+###1. 简介
 
 **Pelican**
 
 Pelican是一个用Python语言编写的静态网站生成器，支持使用restructuredText和Markdown写文章，配置灵活，扩展性强，有许多优秀的主题和插件可供使用。
 
-Pelican 的Github地址是：<https://github.com/getpelican/pelicank>
+Pelican 的Github地址是：<https://github.com/getpelican/pelican>
 
 **Github Pages**
 
 GitHub Pages本用于介绍托管在GitHub的项目， 由于空间免费稳定，用来做搭建一个博客再好不过。
 
+Github Pages提供了两种Pages模式：
 
-####2. Git的安装与配置
+1.** User/Organization Pages** 个人或公司站点
+
+- 使用自己的用户名，每个用户名下面只能建立一个；
+
+- 资源命名必须符合这样的规则username/username.github.com；
+
+- 主干上内容被用来构建和发布页面
+
+2.** Project Pages**项目站点
+
+-  gh-pages分支用于构建和发布；
+
+- 如果user/org pages使用了独立域名，那么托管在账户下的所有project pages将使用相同的域名进行重定向，除非project pages使用了自己的独立域名；
+
+- 如果没有使用独立域名，project pages将通过子路径的形式提供服务username.github.com/projectname；
+
+- 自定义404页面只能在独立域名下使用，否则会使用User Pages 404；
+
+这里选用了项目站点, gh-pages这种方式
+
+###2. Git的安装与配置
 安装
 
 	apt-get install git
@@ -30,12 +51,17 @@ GitHub Pages本用于介绍托管在GitHub的项目， 由于空间免费稳定�
 	git config --global user.name "xxx"
 	git config --global user.emailxxx@gmail.com 
 
+配置Git验证   
+Git的验证方式有Https和SSH两种，这里选用Https, 配置Git的credential helper
+
+	git config --global credential.helper cache
+	git config --global credential.helper 'cache --timeout=3600'
+
 查看配置信息
 
 	git config --list 
 
-
-####3. Pelican的安装与快速向导
+###3. Pelican的安装与快速向导
 安装
 
 	pip install pelican 
@@ -96,7 +122,7 @@ GitHub Pages本用于介绍托管在GitHub的项目， 由于空间免费稳定�
 	mkdir articles files images pages
 
 
-####4. 使用MarkDown撰写第一篇Blog
+###4. 使用Markdown撰写第一篇Blog
 
 	cd articles
 	vi hello.md
@@ -125,17 +151,21 @@ GitHub Pages本用于介绍托管在GitHub的项目， 由于空间免费稳定�
 打开<http://localhost:8000/>即可看到生成的页面
 
 
-####5. 上传到github pages
+###5. 上传到github pages
+
+首先需要在github主页里创建一个新的repo: myblog, 接下来就生成的页面push到这个repo
+
 	cd output
 	git init
+	git checkout --orphan gh-pages
 	git remote add origin https://github.com/raven47git/myblog.git
 	git add -A
 	git commit -m "Update Blog"
 	git push -u origin gh-pages
 
+现在去 <http://raven47git.github.io/myblog>即可看到劳动成果啦～～
 
-
-####6. 其他：
+###6. 其他：
 
 **主题设置**
 
@@ -144,11 +174,17 @@ GitHub Pages本用于介绍托管在GitHub的项目， 由于空间免费稳定�
 	git clone https://github.com/getpelican/pelican-themes.git
 	git clone https://github.com/getpelican/pelican-plugins.git
 
-在 中选择一个喜欢的主题， 放入 blog所在文件夹，在配置文件中指定主题名称
+在pelican-thems中选择一个喜欢的主题， 放入 blog所在文件夹，在配置文件中指定主题名称
 
 	THEME = 'zurb-F5-basic'
 
-####7. 总结
+###7. 总结
 
 一步一步摸索着建起这个Blog，还是蛮有意思的，希望对也想搭一个类似Blog的各位有些帮助。
+
+Pelican doc:    
+ <http://pelican.readthedocs.org/en/3.6.3/quickstart.html>
+
+Python Markdown:   
+<http://pythonhosted.org/Markdown/index.html>
 
